@@ -9,10 +9,11 @@ def seleccionar_carpeta():
     carpeta = filedialog.askdirectory()  # Abre el cuadro de diálogo para seleccionar la carpeta
     return carpeta
  
-# Función para convertir imágenes a formato WebP y guardarlas en una subcarpeta
+# Función para convertir imágenes a formato WebP, cambiar resolución y guardarlas en una subcarpeta
 def convertir_a_webp(carpeta):
     formatos_permitidos = ['.jpg', '.jpeg', '.png', '.bmp', '.tiff']  # Formatos de imagen soportados
     calidad = 85  # Calidad de la imagen en el formato WebP
+    resolucion = (1600, 600)  # Nueva resolución de la imagen
     carpeta_destino = os.path.join(carpeta, 'imgconvertida')  # Carpeta donde se guardarán las imágenes convertidas
 
     # Crea la carpeta de destino si no existe
@@ -26,9 +27,15 @@ def convertir_a_webp(carpeta):
         if extension.lower() in formatos_permitidos:  # Verifica si el archivo es una imagen
             try:
                 imagen = Image.open(archivo_ruta)
+                
+                # Cambiar la resolución de la imagen
+                imagen = imagen.resize(resolucion)
+                
+                # Guardar la imagen en formato WebP en la nueva carpeta
                 webp_ruta = os.path.join(carpeta_destino, f"{nombre}.webp")
-                imagen.save(webp_ruta, 'webp', quality=calidad)  # Guarda la imagen en formato WebP en la nueva carpeta
-                print(f"Convertido: {archivo} a {nombre}.webp")
+                imagen.save(webp_ruta, 'webp', quality=calidad)
+                
+                print(f"Convertido: {archivo} a {nombre}.webp con resolución {resolucion}")
             except Exception as e:
                 print(f"Error al convertir {archivo}: {e}")
 
